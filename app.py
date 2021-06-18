@@ -1,6 +1,5 @@
 import numpy as np
 from flask import Flask, request
-import xlwings as xw
 import json
 
 app = Flask(__name__)
