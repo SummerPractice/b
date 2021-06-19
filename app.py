@@ -27,22 +27,22 @@ def index():
         sum = np.sum(res[ind])
         for i in ind: result[courses[i]] = res[i] / sum
 
-        print(result)
-
         return json.JSONEncoder().encode(result)
 
     else:
         data = getJsonData('db.json')
         quizStructure = data["quiz"]
         questionsList = data["text"]
+        matrix = data["matrix"]
 
-        result = []
+        result = {
+            "quiz":[],
+            "matrix": matrix
+        }
         for quizQuestion in quizStructure:
-            result.append({})
+            result["quiz"].append({})
             for quizQuestionItem in quizQuestion:
-                result[-1][quizQuestionItem] = questionsList[int(quizQuestionItem)]
-
-        print(result)
+                result["quiz"][-1][quizQuestionItem] = questionsList[int(quizQuestionItem)]
 
         return json.JSONEncoder().encode(result)
 
