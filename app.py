@@ -47,6 +47,11 @@ def index():
         return json.JSONEncoder().encode(result)
 
 
+@app.route('/directions', methods=['GET'])
+def directions():
+    return json.JSONEncoder().encode(getJsonData("directions.json"))
+
+
 def getJsonData(path):
     with open(path, 'r', encoding='utf-8') as fh:
         return json.load(fh)
