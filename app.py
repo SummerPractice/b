@@ -36,7 +36,7 @@ def index():
         matrix = data["matrix"]
 
         result = {
-            "quiz":[],
+            "quiz": [],
             "matrix": matrix
         }
         for quizQuestion in quizStructure:
@@ -47,9 +47,35 @@ def index():
         return json.JSONEncoder().encode(result)
 
 
+@app.route('/v2', methods=['POST', 'GET'])
+def v2():
+    data = getJsonData('db.json')
+    quizStructure = data["quiz"]
+    questionsList = data["text"]
+    matrix = data["matrix"]
+    prof_coeffs = data["prof_coeffs"]
+
+    result = {
+        "quiz": [],
+        "matrix": matrix,
+        "prof_coeffs": prof_coeffs
+    }
+    for quizQuestion in quizStructure:
+        result["quiz"].append({})
+        for quizQuestionItem in quizQuestion:
+            result["quiz"][-1][quizQuestionItem] = questionsList[int(quizQuestionItem)]
+
+    return json.JSONEncoder().encode(result)
+
+
 @app.route('/directions', methods=['GET'])
 def directions():
     return json.JSONEncoder().encode(getJsonData("directions.json"))
+
+
+@app.route('/professions', methods=['GET'])
+def professions():
+    return json.JSONEncoder().encode(getJsonData("professions.json"))
 
 
 def getJsonData(path):
