@@ -53,12 +53,12 @@ def v2():
     quizStructure = data["quiz"]
     questionsList = data["text"]
     matrix = data["matrix"]
-    prof_coeffs = data["prof_coeffs"]
+    prof_coeffs = data["prof"]
 
     result = {
         "quiz": [],
         "matrix": matrix,
-        "prof_coeffs": prof_coeffs
+        "prof": prof_coeffs
     }
     for quizQuestion in quizStructure:
         result["quiz"].append({})
