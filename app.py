@@ -47,7 +47,7 @@ def index():
         return json.JSONEncoder().encode(result)
 
 
-@app.route('/questions', methods=['POST', 'GET'])
+@app.route('/questions', methods=['GET'])
 def questions():
     data = getJsonData('db.json')
     quizStructure = data["quiz"]
