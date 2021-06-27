@@ -1,51 +1,44 @@
 import numpy as np
+import pymysql
 from flask import Flask, request
 import json
 
 app = Flask(__name__)
 
 
-@app.route('/', methods=['POST', 'GET'])
-def index():
-    if request.method == 'POST':
-        req = request.get_json(force=True)
-        # req = {"list": [0, 4, 7, 8]}
+@app.route('/users', methods=['POST'])
+def users():
 
-        data = getJsonData('db.json')
+    req = request.get_json(force=True)
 
-        matrix = data["matrix"]
-        courses = data["courses"]
-        n = len(matrix)
+    try:
+        connection = pymysql.connect(
+            host="eu-cdbr-west-01.cleardb.com",
+            port=3306,
+            user="b4a5dd03d2964c",
+            password="9246ee1e",
+            database="heroku_65d7e04abe36d4e",
+            cursorclass=pymysql.cursors.DictCursor
+        )
 
-        answers = [0] * n
-        for i in req["list"]: answers[i] = 1
+        try:
+            with connection.cursor() as cursor:
+                insert_query = "INSERT INTO `user` (first_name, last_name, email, math, rus, phys, inf, individual) VALUES " \
+                               "('%s', '%s', '%s', %i, %i, %i, %i, %i);" % (
+                                   req["first_name"], req["last_name"], req["email"],
+                                   req["math"], req["rus"], req["phys"], req["inf"],
+                                   req["individual"])
+                cursor.execute(insert_query)
 
-        res = np.dot(np.array(answers).reshape(1, n), matrix)[0]
-        ind = np.argpartition(res, -5)[-5:]
+            connection.commit()
 
-        result = {}
-        sum = np.sum(res[ind])
-        for i in ind: result[courses[i]] = res[i] / sum
+        finally:
+            connection.close()
 
-        return json.JSONEncoder().encode(result)
+    except Exception as e:
+        print(e)
 
-    else:
-        data = getJsonData('db.json')
-        quizStructure = data["quiz"]
-        questionsList = data["text"]
-        matrix = data["matrix"]
-
-        result = {
-            "quiz": [],
-            "matrix": matrix
-        }
-        for quizQuestion in quizStructure:
-            result["quiz"].append({})
-            for quizQuestionItem in quizQuestion:
-                result["quiz"][-1][quizQuestionItem] = questionsList[int(quizQuestionItem)]
-
-        return json.JSONEncoder().encode(result)
-
+    return "All good"
 
 @app.route('/questions', methods=['GET'])
 def questions():
