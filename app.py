@@ -25,7 +25,7 @@ def users():
             with connection.cursor() as cursor:
                 insert_query = "INSERT INTO `user` (first_name, last_name, email, math, rus, phys, inf, individual) VALUES " \
                                "('%s', '%s', '%s', %i, %i, %i, %i, %i);" % (
-                                   req["first_name"], req["last_name"], req["email"],
+                                   req["firstname"], req["lastname"], req["email"],
                                    req["math"], req["rus"], req["phys"], req["inf"],
                                    req["individual"])
                 cursor.execute(insert_query)
